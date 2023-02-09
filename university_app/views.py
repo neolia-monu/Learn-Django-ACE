@@ -83,6 +83,7 @@ def postStudent(request):
     stream = io.BytesIO(json_data)
     python_native_data = JSONParser().parse(stream=stream)
     serializers = StudentSerializer(data=python_native_data)
+    print(serializers)
     if serializers.is_valid():
         serializers.save()
         success = {"success": "Record created!"}
@@ -92,6 +93,28 @@ def postStudent(request):
     json_error = JSONRenderer().render(error)
     return HttpResponse(json_error, content_type='application/json', status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['PUT'])
+def partial_data(request, pk = None):
+    id = pk
+    try:
+        json_data = request.body
+        stream = io.BytesIO(json_data)
+        python_native = JSONParser().parse(stream)
+        student = Student.objects.get(id = id)
+        serializers = StudentSerializer(student, data=python_native, partial=True)
+        if serializers.is_valid():
+            serializers.save()
+            res = {"success": "data updated!"}
+            json_data = JSONRenderer().render(res)
+            return HttpResponse(json_data, content_type='application/json')
+        error = {"error" : "Data updation failed"}
+        json_data = JSONRenderer().render(error)
+        return HttpResponse(json_data, content_type='application/json')
+    except Student.DoesNotExist:
+        error = {"error": "Student does not exist"}
+        json_data = JSONRenderer().render(error)
+        return HttpResponse(json_data, content_type='application/json')
 
 # -----------------------------------------------------------
 """

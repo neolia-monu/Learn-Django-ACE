@@ -1,5 +1,6 @@
 from django.urls import path, include
 from . import views
+from .classview import *
 from . import new_view
 from .new_view import StudentView
 
@@ -15,7 +16,10 @@ urlpatterns = [
     # path('success', views.success, name='success'),
     # path('', new_view.StudentView.as_view(), name='getAll'),
     # path('', include(router.urls)),
-    path('getStudent/<int:pk>', views.getStudent, name='getStudent'),
-    path('post', views.postStudent, name='post'),
-    path('students', views.get_all_student, name='getAll'),
+    path('', StudentAPI.as_view()),
+    path('api/student/<int:pk>', StudentAPI.as_view())
+    # path('getStudent/<int:pk>', views.getStudent, name='getStudent'),
+    # path('post', views.postStudent, name='post'),
+    # path('students', views.get_all_student, name='getAll'),
+    # path('update/<int:pk>', views.partial_data, name='put')
 ]
